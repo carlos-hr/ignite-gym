@@ -5,4 +5,5 @@ export type AuthRoutesType = {
   signUp: undefined;
 };
 
-export type AuthNavigatorRoutesProps = NativeStackNavigationProp<AuthRoutes>;
+export type AuthNavigatorRoutesProps =
+  NativeStackNavigationProp<AuthRoutesType>;
