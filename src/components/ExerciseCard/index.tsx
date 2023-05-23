@@ -1,10 +1,11 @@
 import { HStack, Heading, Image, Text, VStack, Icon } from "native-base";
 import { TouchableOpacity } from "react-native";
 import { Entypo } from "@expo/vector-icons";
+import { ExerciseCardProps } from "./types";
 
-export function ExerciseCard() {
+export function ExerciseCard({ ...rest }: ExerciseCardProps) {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity {...rest}>
       <HStack
         p={2}
         pr={4}

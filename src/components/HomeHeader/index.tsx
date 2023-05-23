@@ -1,5 +1,8 @@
 import { UserAvatar } from "@components/UserAvatar";
-import { HStack, Heading, Text, VStack } from "native-base";
+import { HStack, Heading, Icon, Text, VStack } from "native-base";
+
+import { MaterialIcons } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native";
 
 export function HomeHeader() {
   return (
