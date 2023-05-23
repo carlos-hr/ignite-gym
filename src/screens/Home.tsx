@@ -40,8 +40,13 @@ export function Home() {
           </Text>
         </HStack>
 
-        <ExerciseCard />
-        <ExerciseCard />
+        <FlatList
+          data={WORKOUT_GROUPS}
+          keyExtractor={(item) => item}
+          renderItem={({ item }) => <ExerciseCard />}
+          _contentContainerStyle={{ paddingBottom: 20 }}
+          showsVerticalScrollIndicator={false}
+        />
       </VStack>
     </VStack>
   );
