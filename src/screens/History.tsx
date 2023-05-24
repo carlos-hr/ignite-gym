@@ -19,23 +19,24 @@ export function History() {
       <ScreenHeader title="Histórico de exercícios" />
 
       <SectionList
+        px={8}
         sections={DATA}
         keyExtractor={(item) => item}
         renderItem={({ item }) => <HistoryCard />}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={
+          DATA.length === 0 && { flex: 1, justifyContent: "center" }
+        }
         renderSectionHeader={({ section: { title } }) => (
           <Heading color="gray.200" fontSize="md" mt={10} mb={3}>
             {title}
           </Heading>
         )}
-        contentContainerStyle={
-          DATA.length === 0 && { flex: 1, justifyContent: "center" }
-        }
         ListEmptyComponent={() => (
           <Text color="gray.100" textAlign="center">
             Não há exercícios registrados ainda.
           </Text>
         )}
-        px={8}
       />
       <HistoryCard />
     </VStack>
