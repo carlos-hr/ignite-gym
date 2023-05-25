@@ -20,7 +20,7 @@ export function Profile() {
     <VStack>
       <ScreenHeader title="Perfil" />
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 96 }}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 144 }}>
         <Center mt={6} px={10}>
           {isAvatarLoading ? (
             <Skeleton
@@ -48,9 +48,7 @@ export function Profile() {
 
           <Input placeholder="Nome" bgColor="gray.600" />
           <Input placeholder="E-mail" bgColor="gray.600" />
-        </Center>
 
-        <VStack px={10} mb={10}>
           <Heading
             color="gray.200"
             fontSize="md"
@@ -75,7 +73,7 @@ export function Profile() {
           />
 
           <Button title="Atualizar" mt={4} />
-        </VStack>
+        </Center>
       </ScrollView>
     </VStack>
   );
