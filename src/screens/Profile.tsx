@@ -17,10 +17,10 @@ export function Profile() {
   const [isAvatarLoading, setIsAvatarLoading] = useState(true);
 
   return (
-    <VStack>
+    <VStack flex={1}>
       <ScreenHeader title="Perfil" />
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 144 }}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 36 }}>
         <Center mt={6} px={10}>
           {isAvatarLoading ? (
             <Skeleton
