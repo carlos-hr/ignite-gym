@@ -1,6 +1,6 @@
 import { HistoryCard } from "@components/HistoryCard";
 import { ScreenHeader } from "@components/ScreenHeader";
-import { Center, Heading, Text, VStack, SectionList } from "native-base";
+import { Heading, Text, VStack, SectionList } from "native-base";
 
 export function History() {
   const DATA = [
@@ -38,7 +38,6 @@ export function History() {
           </Text>
         )}
       />
-      <HistoryCard />
     </VStack>
   );
 }
