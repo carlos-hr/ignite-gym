@@ -4,10 +4,13 @@ import { Center, Text, VStack, FlatList, HStack, Heading } from "native-base";
 import { useState } from "react";
 import { WORKOUT_GROUPS } from "@constants/groups";
 import { ExerciseCard } from "@components/ExerciseCard";
+import { useNavigation } from "@react-navigation/native";
+import { AppNavigatorRoutesProps } from "@routes/types";
 
 export function Home() {
   // const [groups, setGroups] = useState(WORKOUT_GROUPS);
   const [groupSelected, setGroupSelected] = useState(WORKOUT_GROUPS[0]);
+  const { navigate } = useNavigation<AppNavigatorRoutesProps>();
 
   return (
     <VStack flex={1}>
@@ -44,7 +47,9 @@ export function Home() {
         <FlatList
           data={WORKOUT_GROUPS}
           keyExtractor={(item) => item}
-          renderItem={({ item }) => <ExerciseCard />}
+          renderItem={({ item }) => (
+            <ExerciseCard onPress={() => navigate("exercise")} />
+          )}
           _contentContainerStyle={{ paddingBottom: 20 }}
           showsVerticalScrollIndicator={false}
         />
