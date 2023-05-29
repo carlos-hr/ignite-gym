@@ -11,10 +11,47 @@ import {
   VStack,
 } from "native-base";
 import { useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { Alert, TouchableOpacity } from "react-native";
+
+import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
 
 export function Profile() {
-  const [isAvatarLoading, setIsAvatarLoading] = useState(true);
+  const [isAvatarLoading, setIsAvatarLoading] = useState(false);
+  const [userImage, setUserImage] = useState("");
+
+  async function handleSelectUserImage() {
+    try {
+      setIsAvatarLoading(true);
+      const selectedImage = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 1,
+        aspect: [4, 4],
+        allowsEditing: true,
+      });
+
+      if (selectedImage.canceled) {
+        return;
+      }
+
+      const { uri } = selectedImage.assets[0];
+
+      if (uri) {
+        const imageInfo = await FileSystem.getInfoAsync(uri);
+
+        if (imageInfo.exists && imageInfo.size / 1024 / 1024 > 5) {
+          Alert.alert(
+            "Essa imagem é muito grande. Selecione uma imagem de até 5.MB"
+          );
+        }
+        setUserImage(uri);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsAvatarLoading(false);
+    }
+  }
 
   return (
     <VStack flex={1}>
@@ -31,10 +68,14 @@ export function Profile() {
               endColor="gray.400"
             />
           ) : (
-            <UserAvatar alt="Foto do usuário" size={33} />
+            <UserAvatar
+              alt="Foto do usuário"
+              size={33}
+              source={{ uri: userImage }}
+            />
           )}
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleSelectUserImage}>
             <Text
               color="green.500"
               fontWeight="bold"
