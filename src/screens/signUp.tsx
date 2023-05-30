@@ -59,16 +59,17 @@ export function SignUp() {
             control={control}
             name="name"
             render={({ field: { onChange, value } }) => (
-              <Input placeholder="Nome" onChangeText={onChange} value={value} />
+              <Input
+                placeholder="Nome"
+                value={value}
+                onChangeText={onChange}
+                errorMessage={errors.name?.message}
+              />
             )}
             rules={{
               required: 'Informe o nome',
             }}
           />
-
-          <Text color="white" alignSelf="flex-start" h={6}>
-            {errors.name?.message}
-          </Text>
 
           <Controller
             control={control}
@@ -77,6 +78,7 @@ export function SignUp() {
               <Input
                 value={value}
                 onChangeText={onChange}
+                errorMessage={errors.email?.message}
                 placeholder="Email"
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -91,10 +93,6 @@ export function SignUp() {
             }}
           />
 
-          <Text color="white" alignSelf="flex-start" h={6}>
-            {errors.email?.message}
-          </Text>
-
           <Controller
             control={control}
             name="password"
@@ -102,6 +100,7 @@ export function SignUp() {
               <Input
                 value={value}
                 onChangeText={onChange}
+                errorMessage={errors.password?.message}
                 placeholder="Senha"
                 secureTextEntry
               />
@@ -111,10 +110,6 @@ export function SignUp() {
             }}
           />
 
-          <Text color="white" alignSelf="flex-start" h={6}>
-            {errors.password?.message}
-          </Text>
-
           <Controller
             control={control}
             name="confirm_password"
@@ -122,8 +117,9 @@ export function SignUp() {
               <Input
                 value={value}
                 onChangeText={onChange}
-                placeholder="Confirme a senha"
                 onSubmitEditing={handleSubmit(onSubmit)}
+                errorMessage={errors.confirm_password?.message}
+                placeholder="Confirme a senha"
                 returnKeyType="send"
                 secureTextEntry
               />
@@ -132,10 +128,6 @@ export function SignUp() {
               required: 'Confirme a senha',
             }}
           />
-
-          <Text color="white" alignSelf="flex-start" h={6}>
-            {errors.confirm_password?.message}
-          </Text>
 
           <Button title="Criar e acessar" onPress={handleSubmit(onSubmit)} />
         </Center>
