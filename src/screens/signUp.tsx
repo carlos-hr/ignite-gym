@@ -3,11 +3,13 @@ import BackgroundImg from '@assets/background.png';
 
 import { Input } from '@components/Input';
 import { Button } from '@components/Button';
+import { signUpSchema } from '@schemas/signUp';
 import { AuthNavigatorRoutesProps } from '@routes/types';
 
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
 import { VStack, Image, Text, Center, Heading, ScrollView } from 'native-base';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 type FormDataProps = {
   name: string;
@@ -22,7 +24,9 @@ export function SignUp() {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormDataProps>();
+  } = useForm<FormDataProps>({
+    resolver: yupResolver(signUpSchema),
+  });
 
   function onSubmit(data: FormDataProps) {
     console.log(data);
@@ -66,9 +70,6 @@ export function SignUp() {
                 errorMessage={errors.name?.message}
               />
             )}
-            rules={{
-              required: 'Informe o nome',
-            }}
           />
 
           <Controller
@@ -84,13 +85,6 @@ export function SignUp() {
                 autoCapitalize="none"
               />
             )}
-            rules={{
-              required: 'Informe o e-mail',
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'E-mail inválido',
-              },
-            }}
           />
 
           <Controller
@@ -105,9 +99,6 @@ export function SignUp() {
                 secureTextEntry
               />
             )}
-            rules={{
-              required: 'Informe a senha',
-            }}
           />
 
           <Controller
@@ -124,9 +115,6 @@ export function SignUp() {
                 secureTextEntry
               />
             )}
-            rules={{
-              required: 'Confirme a senha',
-            }}
           />
 
           <Button title="Criar e acessar" onPress={handleSubmit(onSubmit)} />
