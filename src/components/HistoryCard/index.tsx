@@ -1,4 +1,4 @@
-import { HStack, Heading, Text, VStack } from "native-base";
+import { HStack, Heading, Text, VStack } from 'native-base';
 
 export function HistoryCard() {
   return (
@@ -16,6 +16,7 @@ export function HistoryCard() {
         <Heading
           color="white"
           fontSize="md"
+          fontFamily="heading"
           textTransform="capitalize"
           numberOfLines={2}
         >

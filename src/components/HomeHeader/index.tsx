@@ -1,8 +1,8 @@
-import { UserAvatar } from "@components/UserAvatar";
-import { HStack, Heading, Icon, Text, VStack } from "native-base";
+import { UserAvatar } from '@components/UserAvatar';
+import { HStack, Heading, Icon, Text, VStack } from 'native-base';
 
-import { MaterialIcons } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native";
+import { MaterialIcons } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native';
 
 export function HomeHeader() {
   return (
@@ -14,7 +14,7 @@ export function HomeHeader() {
           Olá,
         </Text>
 
-        <Heading color="gray.100" fontSize="md">
+        <Heading color="gray.100" fontSize="md" fontFamily="heading">
           User
         </Heading>
       </VStack>
