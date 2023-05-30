@@ -1,7 +1,7 @@
-import { Button } from "@components/Button";
-import { Input } from "@components/Input";
-import { ScreenHeader } from "@components/ScreenHeader";
-import { UserAvatar } from "@components/UserAvatar";
+import { Button } from '@components/Button';
+import { Input } from '@components/Input';
+import { ScreenHeader } from '@components/ScreenHeader';
+import { UserAvatar } from '@components/UserAvatar';
 import {
   Center,
   Heading,
@@ -9,16 +9,16 @@ import {
   Skeleton,
   Text,
   VStack,
-} from "native-base";
-import { useState } from "react";
-import { Alert, TouchableOpacity } from "react-native";
+} from 'native-base';
+import { useState } from 'react';
+import { Alert, TouchableOpacity } from 'react-native';
 
-import * as ImagePicker from "expo-image-picker";
-import * as FileSystem from "expo-file-system";
+import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
 
 export function Profile() {
   const [isAvatarLoading, setIsAvatarLoading] = useState(false);
-  const [userImage, setUserImage] = useState("");
+  const [userImage, setUserImage] = useState('');
 
   async function handleSelectUserImage() {
     try {
@@ -41,7 +41,7 @@ export function Profile() {
 
         if (imageInfo.exists && imageInfo.size / 1024 / 1024 > 5) {
           Alert.alert(
-            "Essa imagem é muito grande. Selecione uma imagem de até 5.MB"
+            'Essa imagem é muito grande. Selecione uma imagem de até 5.MB'
           );
         }
         setUserImage(uri);
@@ -91,11 +91,12 @@ export function Profile() {
           <Input placeholder="E-mail" bgColor="gray.600" />
 
           <Heading
-            color="gray.200"
-            fontSize="md"
             mb={2}
-            alignSelf="flex-start"
             mt={12}
+            fontSize="md"
+            color="gray.200"
+            fontFamily="heading"
+            alignSelf="flex-start"
           >
             Alterar senha
           </Heading>

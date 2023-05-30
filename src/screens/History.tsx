@@ -1,16 +1,16 @@
-import { HistoryCard } from "@components/HistoryCard";
-import { ScreenHeader } from "@components/ScreenHeader";
-import { Heading, Text, VStack, SectionList } from "native-base";
+import { HistoryCard } from '@components/HistoryCard';
+import { ScreenHeader } from '@components/ScreenHeader';
+import { Heading, Text, VStack, SectionList } from 'native-base';
 
 export function History() {
   const DATA = [
     {
-      title: "Main dishes",
-      data: ["Pizza", "Burger", "Risotto"],
+      title: 'Main dishes',
+      data: ['Pizza', 'Burger', 'Risotto'],
     },
     {
-      title: "Sides",
-      data: ["French Fries", "Onion Rings", "Fried Shrimps"],
+      title: 'Sides',
+      data: ['French Fries', 'Onion Rings', 'Fried Shrimps'],
     },
   ];
 
@@ -25,10 +25,16 @@ export function History() {
         renderItem={({ item }) => <HistoryCard />}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={
-          DATA.length === 0 && { flex: 1, justifyContent: "center" }
+          DATA.length === 0 && { flex: 1, justifyContent: 'center' }
         }
         renderSectionHeader={({ section: { title } }) => (
-          <Heading color="gray.200" fontSize="md" mt={10} mb={3}>
+          <Heading
+            color="gray.200"
+            fontSize="md"
+            mt={10}
+            mb={3}
+            fontFamily="heading"
+          >
             {title}
           </Heading>
         )}

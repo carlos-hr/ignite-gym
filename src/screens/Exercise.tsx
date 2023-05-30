@@ -7,16 +7,16 @@ import {
   Text,
   VStack,
   ScrollView,
-} from "native-base";
-import { Feather } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { AppNavigatorRoutesProps } from "@routes/types";
+} from 'native-base';
+import { Feather } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { AppNavigatorRoutesProps } from '@routes/types';
 
-import BodySvg from "@assets/body.svg";
-import SeriesSvg from "@assets/series.svg";
-import RepetitionsSvg from "@assets/repetitions.svg";
-import { Button } from "@components/Button";
+import BodySvg from '@assets/body.svg';
+import SeriesSvg from '@assets/series.svg';
+import RepetitionsSvg from '@assets/repetitions.svg';
+import { Button } from '@components/Button';
 
 export function Exercise() {
   const { goBack } = useNavigation<AppNavigatorRoutesProps>();
@@ -35,7 +35,12 @@ export function Exercise() {
             mb={8}
             alignItems="center"
           >
-            <Heading color="gray.100" fontSize="lg" flexShrink={1}>
+            <Heading
+              color="gray.100"
+              fontSize="lg"
+              flexShrink={1}
+              fontFamily="heading"
+            >
               Puxada frontal
             </Heading>
 
