@@ -11,6 +11,7 @@
       "@contexts/*": ["./src/contexts/*"],
       "@hooks/*": ["./src/hooks/*"],
       "@services/*": ["./src/services/*"],
+      "@schemas/*": ["./src/schemas/*"],
       "@screens/*": ["./src/screens/*"],
       "@storage/*": ["./src/storage/*"],
       "@utils/*": ["./src/utils/*"],
