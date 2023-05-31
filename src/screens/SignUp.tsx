@@ -44,10 +44,11 @@ export function SignUp() {
   });
 
   async function onSubmit(data: FormDataProps) {
-    const { name, email, password } = data;
     setIsCreatingUser(true);
+    const { name, email, password } = data;
+
     try {
-      const { data } = await api.post('/users', {
+      const response = await api.post('/users', {
         name,
         email,
         password,
@@ -55,13 +56,15 @@ export function SignUp() {
     } catch (error) {
       const isAppError = error instanceof AppError;
 
-      if (isAppError) {
-        toast.show({
-          title: error.message,
-          placement: 'top',
-          bgColor: 'red.500',
-        });
-      }
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível criar a conta. Tente novamente mais tarde.';
+
+      toast.show({
+        title,
+        placement: 'top',
+        bgColor: 'red.500',
+      });
     } finally {
       setIsCreatingUser(false);
     }

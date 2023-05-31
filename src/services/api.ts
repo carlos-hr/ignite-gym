@@ -14,8 +14,6 @@ api.interceptors.response.use(
       return Promise.reject(new AppError(message));
     }
 
-    return Promise.reject(
-      new AppError('Erro no servidor. Tente novamente mais tarde')
-    );
+    return Promise.reject(error);
   }
 );
