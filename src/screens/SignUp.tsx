@@ -1,15 +1,27 @@
 import LogoSvg from '@assets/logo.svg';
 import BackgroundImg from '@assets/background.png';
 
+import { api } from '@services/api';
 import { Input } from '@components/Input';
+import { AppError } from '@utils/appError';
 import { Button } from '@components/Button';
 import { signUpSchema } from '@schemas/signUp';
 import { AuthNavigatorRoutesProps } from '@routes/types';
 
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
-import { VStack, Image, Text, Center, Heading, ScrollView } from 'native-base';
+import {
+  VStack,
+  Image,
+  Text,
+  Center,
+  Heading,
+  ScrollView,
+  useToast,
+  Spinner,
+} from 'native-base';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useState } from 'react';
 
 type FormDataProps = {
   name: string;
@@ -20,6 +32,9 @@ type FormDataProps = {
 
 export function SignUp() {
   const { navigate } = useNavigation<AuthNavigatorRoutesProps>();
+  const [isCreatingUser, setIsCreatingUser] = useState(false);
+  const toast = useToast();
+
   const {
     control,
     handleSubmit,
@@ -29,19 +44,30 @@ export function SignUp() {
   });
 
   async function onSubmit(data: FormDataProps) {
+    setIsCreatingUser(true);
     const { name, email, password } = data;
-    const response = await fetch('http://192.168.2.108:3333/users', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({ name, email, password }),
-    })
-      .then((res) => res.json())
-      .then((data) => data);
 
-    console.log(response);
+    try {
+      const response = await api.post('/users', {
+        name,
+        email,
+        password,
+      });
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível criar a conta. Tente novamente mais tarde.';
+
+      toast.show({
+        title,
+        placement: 'top',
+        bgColor: 'red.500',
+      });
+    } finally {
+      setIsCreatingUser(false);
+    }
   }
 
   return (
@@ -129,7 +155,12 @@ export function SignUp() {
             )}
           />
 
-          <Button title="Criar e acessar" onPress={handleSubmit(onSubmit)} />
+          <Button
+            title={
+              isCreatingUser ? <Spinner color="white" /> : 'Criar e acessar'
+            }
+            onPress={handleSubmit(onSubmit)}
+          />
         </Center>
 
         <Button
