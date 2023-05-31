@@ -1,7 +1,7 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { SignIn } from "@screens/SignIn";
-import { SignUp } from "@screens/SignUp";
-import { AuthRoutesType } from "./types";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { SignIn } from '@screens/SignIn';
+import { SignUp } from '@screens/SignUp';
+import { AuthRoutesType } from './types';
 
 const { Navigator, Screen } = createNativeStackNavigator<AuthRoutesType>();
 

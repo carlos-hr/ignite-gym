@@ -28,8 +28,20 @@ export function SignUp() {
     resolver: yupResolver(signUpSchema),
   });
 
-  function onSubmit(data: FormDataProps) {
-    console.log(data);
+  async function onSubmit(data: FormDataProps) {
+    const { name, email, password } = data;
+    const response = await fetch('http://192.168.2.108:3333/users', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({ name, email, password }),
+    })
+      .then((res) => res.json())
+      .then((data) => data);
+
+    console.log(response);
   }
 
   return (
