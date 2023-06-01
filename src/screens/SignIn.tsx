@@ -1,13 +1,28 @@
-import { VStack, Image, Text, Center, Heading, ScrollView } from "native-base";
-import BackgroundImg from "@assets/background.png";
-import LogoSvg from "@assets/logo.svg";
-import { Input } from "@components/Input";
-import { Button } from "@components/Button";
-import { useNavigation } from "@react-navigation/native";
-import { AuthNavigatorRoutesProps } from "@routes/types";
+import { useForm, Controller } from 'react-hook-form';
+import { useNavigation } from '@react-navigation/native';
+import { VStack, Image, Text, Center, Heading, ScrollView } from 'native-base';
+
+import { Input } from '@components/Input';
+import { Button } from '@components/Button';
+import { AuthNavigatorRoutesProps } from '@routes/types';
+
+import LogoSvg from '@assets/logo.svg';
+import BackgroundImg from '@assets/background.png';
+
+interface FormDataProps {
+  email: string;
+  password: string;
+}
 
 export function SignIn() {
   const { navigate } = useNavigation<AuthNavigatorRoutesProps>();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormDataProps>();
+
+  function onSubmit(data: FormDataProps) {}
 
   return (
     <ScrollView
@@ -36,14 +51,40 @@ export function SignIn() {
             Acesse sua conta
           </Heading>
 
-          <Input
-            placeholder="Email"
-            keyboardType="email-address"
-            autoCapitalize="none"
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                placeholder="Email"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                errorMessage={errors.email?.message}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+            rules={{ required: 'Informe o e-mail' }}
           />
+
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                placeholder="Senha"
+                errorMessage={errors.password?.message}
+                onChangeText={onChange}
+                value={value}
+                secureTextEntry
+              />
+            )}
+            rules={{ required: 'Informe a senha' }}
+          />
+
           <Input placeholder="Senha" secureTextEntry />
 
-          <Button title="Acessar" />
+          <Button title="Acessar" onPress={handleSubmit(onSubmit)} />
         </Center>
 
         <Center mt={24}>
@@ -53,7 +94,7 @@ export function SignIn() {
           <Button
             title="Criar conta"
             variant="outline"
-            onPress={() => navigate("signUp")}
+            onPress={() => navigate('signUp')}
           />
         </Center>
       </VStack>

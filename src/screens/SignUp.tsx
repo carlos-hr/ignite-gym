@@ -23,12 +23,12 @@ import {
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
 
-type FormDataProps = {
+interface FormDataProps {
   name: string;
   email: string;
   password: string;
   confirm_password: string;
-};
+}
 
 export function SignUp() {
   const { navigate } = useNavigation<AuthNavigatorRoutesProps>();
