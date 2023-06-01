@@ -6,5 +6,5 @@ export interface AuthContextProviderProps {
 }
 
 export interface AuthContextDataProps {
-  user: UserDTO;
+  user?: UserDTO;
 }
