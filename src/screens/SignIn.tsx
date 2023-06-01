@@ -8,6 +8,8 @@ import { AuthNavigatorRoutesProps } from '@routes/types';
 
 import LogoSvg from '@assets/logo.svg';
 import BackgroundImg from '@assets/background.png';
+import { useAuthContext } from '@hooks/useAuthContext';
+import { useError } from '@hooks/useError';
 
 interface FormDataProps {
   email: string;
@@ -16,13 +18,26 @@ interface FormDataProps {
 
 export function SignIn() {
   const { navigate } = useNavigation<AuthNavigatorRoutesProps>();
+  const { signIn } = useAuthContext();
+
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<FormDataProps>();
 
-  function onSubmit(data: FormDataProps) {}
+  async function onSubmit(data: FormDataProps) {
+    const { email, password } = data;
+
+    try {
+      await signIn(email, password);
+    } catch (error) {
+      useError(
+        error,
+        'Não foi possível acessar a conta. Tente novamente mais tarde.'
+      );
+    }
+  }
 
   return (
     <ScrollView

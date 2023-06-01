@@ -7,4 +7,5 @@ export interface AuthContextProviderProps {
 
 export interface AuthContextDataProps {
   user?: UserDTO;
+  signIn: (email: string, password: string) => Promise<void>;
 }
