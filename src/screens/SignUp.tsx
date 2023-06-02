@@ -31,9 +31,9 @@ interface FormDataProps {
 }
 
 export function SignUp() {
-  const { navigate } = useNavigation<AuthNavigatorRoutesProps>();
   const [isCreatingUser, setIsCreatingUser] = useState(false);
-
+  const { navigate } = useNavigation<AuthNavigatorRoutesProps>();
+  const { showError } = useError();
   const {
     control,
     handleSubmit,
@@ -53,7 +53,7 @@ export function SignUp() {
         password,
       });
     } catch (error) {
-      useError(
+      showError(
         error,
         'Não foi possível criar a conta. Tente novamente mais tarde.'
       );
@@ -152,6 +152,7 @@ export function SignUp() {
               isCreatingUser ? <Spinner color="white" /> : 'Criar e acessar'
             }
             onPress={handleSubmit(onSubmit)}
+            isDisabled={isCreatingUser}
           />
         </Center>
 

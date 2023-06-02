@@ -21,6 +21,8 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   }
 
   return (
-    <AuthContext.Provider value={{ signIn }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, signIn }}>
+      {children}
+    </AuthContext.Provider>
   );
 };

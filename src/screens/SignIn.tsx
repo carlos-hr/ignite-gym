@@ -1,6 +1,14 @@
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
-import { VStack, Image, Text, Center, Heading, ScrollView } from 'native-base';
+import {
+  VStack,
+  Image,
+  Text,
+  Center,
+  Heading,
+  ScrollView,
+  Spinner,
+} from 'native-base';
 
 import { Input } from '@components/Input';
 import { Button } from '@components/Button';
@@ -10,6 +18,7 @@ import LogoSvg from '@assets/logo.svg';
 import BackgroundImg from '@assets/background.png';
 import { useAuthContext } from '@hooks/useAuthContext';
 import { useError } from '@hooks/useError';
+import { useState } from 'react';
 
 interface FormDataProps {
   email: string;
@@ -17,8 +26,10 @@ interface FormDataProps {
 }
 
 export function SignIn() {
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const { navigate } = useNavigation<AuthNavigatorRoutesProps>();
   const { signIn } = useAuthContext();
+  const { showError } = useError();
 
   const {
     control,
@@ -28,14 +39,17 @@ export function SignIn() {
 
   async function onSubmit(data: FormDataProps) {
     const { email, password } = data;
+    setIsLoggingIn(true);
 
     try {
       await signIn(email, password);
     } catch (error) {
-      useError(
+      showError(
         error,
         'Não foi possível acessar a conta. Tente novamente mais tarde.'
       );
+    } finally {
+      setIsLoggingIn(false);
     }
   }
 
@@ -97,9 +111,11 @@ export function SignIn() {
             rules={{ required: 'Informe a senha' }}
           />
 
-          <Input placeholder="Senha" secureTextEntry />
-
-          <Button title="Acessar" onPress={handleSubmit(onSubmit)} />
+          <Button
+            title={isLoggingIn ? <Spinner color="white" /> : 'Acessar'}
+            onPress={handleSubmit(onSubmit)}
+            isDisabled={isLoggingIn}
+          />
         </Center>
 
         <Center mt={24}>
