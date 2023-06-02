@@ -1,16 +1,20 @@
 import { AppError } from '@utils/appError';
 import { useToast } from 'native-base';
 
-export const useError = (error: unknown, customMessage: string) => {
+export const useError = () => {
   const toast = useToast();
 
-  const isAppError = error instanceof AppError;
+  const showError = (error: unknown, customMessage: string) => {
+    const isAppError = error instanceof AppError;
 
-  const title = isAppError ? error.message : customMessage;
+    const title = isAppError ? error.message : customMessage;
 
-  toast.show({
-    title,
-    placement: 'top',
-    bgColor: 'red.500',
-  });
+    toast.show({
+      title,
+      placement: 'top',
+      bgColor: 'red.500',
+    });
+  };
+
+  return { showError };
 };
