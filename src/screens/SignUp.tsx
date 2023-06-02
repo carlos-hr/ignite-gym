@@ -13,6 +13,7 @@ import { VStack, Image, Text, Center, Heading, ScrollView } from 'native-base';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
 import { useError } from '@hooks/useError';
+import { useAuthContext } from '@hooks/useAuthContext';
 
 interface FormDataProps {
   name: string;
@@ -24,7 +25,9 @@ interface FormDataProps {
 export function SignUp() {
   const [isCreatingUser, setIsCreatingUser] = useState(false);
   const { navigate } = useNavigation<AuthNavigatorRoutesProps>();
+  const { signIn } = useAuthContext();
   const { showError } = useError();
+
   const {
     control,
     handleSubmit,
@@ -34,15 +37,17 @@ export function SignUp() {
   });
 
   async function onSubmit(data: FormDataProps) {
-    setIsCreatingUser(true);
-    const { name, email, password } = data;
-
     try {
-      const response = await api.post('/users', {
+      setIsCreatingUser(true);
+      const { name, email, password } = data;
+
+      await api.post('/users', {
         name,
         email,
         password,
       });
+
+      await signIn(email, password);
     } catch (error) {
       showError(
         error,
