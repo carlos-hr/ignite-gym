@@ -8,6 +8,7 @@ export const AuthContext = createContext({} as AuthContextDataProps);
 
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [user, setUser] = useState<UserDTO>({} as UserDTO);
+  const [isFetchingUserData, setIsFetchingUserData] = useState(true);
 
   async function signIn(email: string, password: string) {
     try {
@@ -22,10 +23,16 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   }
 
   async function loadUserData() {
-    const userLogged = await getStoredUserData();
+    try {
+      const userLogged = await getStoredUserData();
 
-    if (!!userLogged) {
-      setUser(userLogged);
+      if (!!userLogged) {
+        setUser(userLogged);
+      }
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsFetchingUserData(false);
     }
   }
 
@@ -34,7 +41,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, signIn }}>
+    <AuthContext.Provider value={{ user, signIn, isFetchingUserData }}>
       {children}
     </AuthContext.Provider>
   );
