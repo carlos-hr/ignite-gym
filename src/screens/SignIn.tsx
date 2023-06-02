@@ -1,14 +1,6 @@
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
-import {
-  VStack,
-  Image,
-  Text,
-  Center,
-  Heading,
-  ScrollView,
-  Spinner,
-} from 'native-base';
+import { VStack, Image, Text, Center, Heading, ScrollView } from 'native-base';
 
 import { Input } from '@components/Input';
 import { Button } from '@components/Button';
@@ -112,9 +104,9 @@ export function SignIn() {
           />
 
           <Button
-            title={isLoggingIn ? <Spinner color="white" /> : 'Acessar'}
+            title="Acessar"
             onPress={handleSubmit(onSubmit)}
-            isDisabled={isLoggingIn}
+            isLoading={isLoggingIn}
           />
         </Center>
 

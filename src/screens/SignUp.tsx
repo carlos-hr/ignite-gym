@@ -9,16 +9,7 @@ import { AuthNavigatorRoutesProps } from '@routes/types';
 
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
-import {
-  VStack,
-  Image,
-  Text,
-  Center,
-  Heading,
-  ScrollView,
-  useToast,
-  Spinner,
-} from 'native-base';
+import { VStack, Image, Text, Center, Heading, ScrollView } from 'native-base';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
 import { useError } from '@hooks/useError';
@@ -148,11 +139,9 @@ export function SignUp() {
           />
 
           <Button
-            title={
-              isCreatingUser ? <Spinner color="white" /> : 'Criar e acessar'
-            }
+            title="Criar e acessar"
             onPress={handleSubmit(onSubmit)}
-            isDisabled={isCreatingUser}
+            isLoading={isCreatingUser}
           />
         </Center>
 
