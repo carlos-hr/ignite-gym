@@ -3,37 +3,30 @@ import BackgroundImg from '@assets/background.png';
 
 import { api } from '@services/api';
 import { Input } from '@components/Input';
-import { AppError } from '@utils/appError';
 import { Button } from '@components/Button';
 import { signUpSchema } from '@schemas/signUp';
 import { AuthNavigatorRoutesProps } from '@routes/types';
 
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
-import {
-  VStack,
-  Image,
-  Text,
-  Center,
-  Heading,
-  ScrollView,
-  useToast,
-  Spinner,
-} from 'native-base';
+import { VStack, Image, Text, Center, Heading, ScrollView } from 'native-base';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
+import { useError } from '@hooks/useError';
+import { useAuthContext } from '@hooks/useAuthContext';
 
-type FormDataProps = {
+interface FormDataProps {
   name: string;
   email: string;
   password: string;
   confirm_password: string;
-};
+}
 
 export function SignUp() {
-  const { navigate } = useNavigation<AuthNavigatorRoutesProps>();
   const [isCreatingUser, setIsCreatingUser] = useState(false);
-  const toast = useToast();
+  const { navigate } = useNavigation<AuthNavigatorRoutesProps>();
+  const { signIn } = useAuthContext();
+  const { showError } = useError();
 
   const {
     control,
@@ -44,27 +37,22 @@ export function SignUp() {
   });
 
   async function onSubmit(data: FormDataProps) {
-    setIsCreatingUser(true);
-    const { name, email, password } = data;
-
     try {
-      const response = await api.post('/users', {
+      setIsCreatingUser(true);
+      const { name, email, password } = data;
+
+      await api.post('/users', {
         name,
         email,
         password,
       });
+
+      await signIn(email, password);
     } catch (error) {
-      const isAppError = error instanceof AppError;
-
-      const title = isAppError
-        ? error.message
-        : 'Não foi possível criar a conta. Tente novamente mais tarde.';
-
-      toast.show({
-        title,
-        placement: 'top',
-        bgColor: 'red.500',
-      });
+      showError(
+        error,
+        'Não foi possível criar a conta. Tente novamente mais tarde.'
+      );
     } finally {
       setIsCreatingUser(false);
     }
@@ -156,10 +144,9 @@ export function SignUp() {
           />
 
           <Button
-            title={
-              isCreatingUser ? <Spinner color="white" /> : 'Criar e acessar'
-            }
+            title="Criar e acessar"
             onPress={handleSubmit(onSubmit)}
+            isLoading={isCreatingUser}
           />
         </Center>
 
