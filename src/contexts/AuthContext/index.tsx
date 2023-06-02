@@ -2,7 +2,11 @@ import { createContext, useEffect, useState } from 'react';
 import { AuthContextDataProps, AuthContextProviderProps } from './types';
 import { UserDTO } from '@dtos/user';
 import { api } from '@services/api';
-import { getStoredUserData, storeUserData } from '@storage/user';
+import {
+  deleteStoredUser,
+  getStoredUserData,
+  storeUserData,
+} from '@storage/user';
 
 export const AuthContext = createContext({} as AuthContextDataProps);
 
@@ -19,6 +23,19 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       }
     } catch (error) {
       throw error;
+    }
+  }
+
+  async function signOut() {
+    try {
+      setIsFetchingUserData(true);
+      setUser({} as UserDTO);
+
+      await deleteStoredUser();
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsFetchingUserData(false);
     }
   }
 
@@ -41,7 +58,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, signIn, isFetchingUserData }}>
+    <AuthContext.Provider value={{ isFetchingUserData, signIn, signOut, user }}>
       {children}
     </AuthContext.Provider>
   );

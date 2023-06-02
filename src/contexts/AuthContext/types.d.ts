@@ -8,5 +8,6 @@ export interface AuthContextProviderProps {
 export interface AuthContextDataProps {
   user: UserDTO;
   isFetchingUserData: boolean;
+  signOut: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
 }
