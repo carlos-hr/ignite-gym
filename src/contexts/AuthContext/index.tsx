@@ -7,7 +7,11 @@ import {
   getStoredUserData,
   storeUserData,
 } from '@storage/user';
-import { getStoredAuthToken, storeAuthToken } from '@storage/authToken';
+import {
+  deleteStoredAuthToken,
+  getStoredAuthToken,
+  storeAuthToken,
+} from '@storage/authToken';
 
 export const AuthContext = createContext({} as AuthContextDataProps);
 
@@ -52,6 +56,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       setUser({} as UserDTO);
 
       await deleteStoredUser();
+      await deleteStoredAuthToken();
     } catch (error) {
       throw error;
     } finally {
