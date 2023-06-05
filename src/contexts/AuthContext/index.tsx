@@ -22,8 +22,12 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   }
 
   async function storeUserAndToken(userData: UserDTO, token: string) {
-    await storeAuthToken(token);
-    await storeUserData(userData);
+    try {
+      await storeAuthToken(token);
+      await storeUserData(userData);
+    } catch (error) {
+      throw error;
+    }
   }
 
   async function signIn(email: string, password: string) {
