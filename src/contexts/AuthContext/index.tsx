@@ -7,6 +7,7 @@ import {
   getStoredUserData,
   storeUserData,
 } from '@storage/user';
+import { storeAuthToken } from '@storage/authToken';
 
 export const AuthContext = createContext({} as AuthContextDataProps);
 
@@ -14,15 +15,27 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [user, setUser] = useState<UserDTO>({} as UserDTO);
   const [isFetchingUserData, setIsFetchingUserData] = useState(true);
 
+  async function storeUserAndToken(userData: UserDTO, token: string) {
+    setUser(userData);
+
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+    await storeAuthToken(token);
+    await storeUserData(userData);
+  }
+
   async function signIn(email: string, password: string) {
     try {
+      setIsFetchingUserData(true);
       const { data } = await api.post('/sessions', { email, password });
+
       if (data.user) {
-        setUser(data.user);
-        await storeUserData(data.user);
+        await storeUserAndToken(data.user, data.token);
       }
     } catch (error) {
       throw error;
+    } finally {
+      setIsFetchingUserData(false);
     }
   }
 

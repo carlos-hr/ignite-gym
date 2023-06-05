@@ -1,0 +1,11 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { AUTH_TOKEN_STORAGE } from '@storage/config';
+
+export async function storeAuthToken(token: string) {
+  await AsyncStorage.setItem(AUTH_TOKEN_STORAGE, token);
+}
+
+export async function getStoredAuthToken() {}
+
+export async function deleteStoredAuthToken() {}
