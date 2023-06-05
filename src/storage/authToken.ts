@@ -6,6 +6,10 @@ export async function storeAuthToken(token: string) {
   await AsyncStorage.setItem(AUTH_TOKEN_STORAGE, token);
 }
 
-export async function getStoredAuthToken() {}
+export async function getStoredAuthToken() {
+  const token = await AsyncStorage.getItem(AUTH_TOKEN_STORAGE);
+
+  return token;
+}
 
 export async function deleteStoredAuthToken() {}
