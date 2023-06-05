@@ -7,6 +7,11 @@ import {
   getStoredUserData,
   storeUserData,
 } from '@storage/user';
+import {
+  deleteStoredAuthToken,
+  getStoredAuthToken,
+  storeAuthToken,
+} from '@storage/authToken';
 
 export const AuthContext = createContext({} as AuthContextDataProps);
 
@@ -14,15 +19,34 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [user, setUser] = useState<UserDTO>({} as UserDTO);
   const [isFetchingUserData, setIsFetchingUserData] = useState(true);
 
+  function setUserAndHeaders(userData: UserDTO, token: string) {
+    setUser(userData);
+
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  }
+
+  async function storeUserAndToken(userData: UserDTO, token: string) {
+    try {
+      await storeAuthToken(token);
+      await storeUserData(userData);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async function signIn(email: string, password: string) {
     try {
+      setIsFetchingUserData(true);
       const { data } = await api.post('/sessions', { email, password });
-      if (data.user) {
-        setUser(data.user);
-        await storeUserData(data.user);
+
+      if (data.user && data.token) {
+        setUserAndHeaders(data.user, data.token);
+        await storeUserAndToken(data.user, data.token);
       }
     } catch (error) {
       throw error;
+    } finally {
+      setIsFetchingUserData(false);
     }
   }
 
@@ -32,6 +56,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       setUser({} as UserDTO);
 
       await deleteStoredUser();
+      await deleteStoredAuthToken();
     } catch (error) {
       throw error;
     } finally {
@@ -41,10 +66,13 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
   async function loadUserData() {
     try {
+      setIsFetchingUserData(true);
       const userLogged = await getStoredUserData();
+      const token = await getStoredAuthToken();
 
-      if (!!userLogged) {
-        setUser(userLogged);
+      if (!!userLogged && !!token) {
+        setUserAndHeaders(userLogged, token);
+        await storeUserAndToken(userLogged, token);
       }
     } catch (error) {
       throw error;
