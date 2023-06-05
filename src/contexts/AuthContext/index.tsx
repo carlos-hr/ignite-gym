@@ -15,10 +15,15 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [user, setUser] = useState<UserDTO>({} as UserDTO);
   const [isFetchingUserData, setIsFetchingUserData] = useState(true);
 
-  async function setUserAndHeaders(userData: UserDTO, token: string) {
+  function setUserAndHeaders(userData: UserDTO, token: string) {
     setUser(userData);
 
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  }
+
+  async function storeUserAndToken(userData: UserDTO, token: string) {
+    await storeAuthToken(token);
+    await storeUserData(userData);
   }
 
   async function signIn(email: string, password: string) {
@@ -27,10 +32,8 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       const { data } = await api.post('/sessions', { email, password });
 
       if (data.user && data.token) {
-        await setUserAndHeaders(data.user, data.token);
-
-        await storeUserData(data.user);
-        await storeAuthToken(data.token);
+        setUserAndHeaders(data.user, data.token);
+        await storeUserAndToken(data.user, data.token);
       }
     } catch (error) {
       throw error;
@@ -59,8 +62,8 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       const token = await getStoredAuthToken();
 
       if (!!userLogged && !!token) {
-        setUser(userLogged);
         setUserAndHeaders(userLogged, token);
+        await storeUserAndToken(userLogged, token);
       }
     } catch (error) {
       throw error;
