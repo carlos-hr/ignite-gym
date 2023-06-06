@@ -41,6 +41,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
       if (data.user && data.token) {
         setUserAndHeaders(data.user, data.token);
+
         await storeUserAndToken(data.user, data.token);
       }
     } catch (error) {

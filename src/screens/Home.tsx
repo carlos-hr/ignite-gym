@@ -1,23 +1,61 @@
 import { Group } from '@components/Group';
 import { HomeHeader } from '@components/HomeHeader';
 import { Text, VStack, FlatList, HStack, Heading } from 'native-base';
-import { useState } from 'react';
-import { WORKOUT_GROUPS } from '@constants/groups';
+import { useCallback, useEffect, useState } from 'react';
 import { ExerciseCard } from '@components/ExerciseCard';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { AppNavigatorRoutesProps } from '@routes/types';
+import { useError } from '@hooks/useError';
+import { api } from '@services/api';
+import { ExerciseDTO } from '@dtos/exercise';
 
 export function Home() {
-  // const [groups, setGroups] = useState(WORKOUT_GROUPS);
-  const [groupSelected, setGroupSelected] = useState(WORKOUT_GROUPS[0]);
+  const [groups, setGroups] = useState<string[]>([]);
+  const [exercises, setExercises] = useState<ExerciseDTO[]>([]);
+  const [groupSelected, setGroupSelected] = useState('');
+
   const { navigate } = useNavigation<AppNavigatorRoutesProps>();
+
+  const { showError } = useError();
+
+  async function fetchGroups() {
+    try {
+      const { data } = await api.get('/groups');
+      setGroups(data);
+
+      if (!groupSelected) {
+        setGroupSelected(data[0]);
+      }
+    } catch (error) {
+      showError(error, 'Não foi possível carregar os grupos musculares');
+    }
+  }
+
+  async function fetchExercisesByGroup() {
+    try {
+      const { data } = await api.get(`/exercises/bygroup/${groupSelected}`);
+      setExercises(data);
+    } catch (error) {
+      showError(error, 'Não foi possível carregar os exercícios');
+    }
+  }
+
+  useEffect(() => {
+    fetchGroups();
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchExercisesByGroup();
+    }, [groupSelected])
+  );
 
   return (
     <VStack flex={1}>
       <HomeHeader />
 
       <FlatList
-        data={WORKOUT_GROUPS}
+        data={groups}
         keyExtractor={(item) => item}
         renderItem={({ item }) => (
           <Group
@@ -45,10 +83,13 @@ export function Home() {
         </HStack>
 
         <FlatList
-          data={WORKOUT_GROUPS}
-          keyExtractor={(item) => item}
+          data={exercises}
+          keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <ExerciseCard onPress={() => navigate('exercise')} />
+            <ExerciseCard
+              exercise={item}
+              onPress={() => navigate('exercise')}
+            />
           )}
           _contentContainerStyle={{ paddingBottom: 20 }}
           showsVerticalScrollIndicator={false}
