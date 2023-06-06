@@ -1,5 +1,5 @@
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type AuthRoutesType = {
   signIn: undefined;
@@ -11,7 +11,9 @@ export type AuthNavigatorRoutesProps =
 
 export type AppRoutesType = {
   home: undefined;
-  exercise: undefined;
+  exercise: {
+    id: string;
+  };
   history: undefined;
   profile: undefined;
 };
