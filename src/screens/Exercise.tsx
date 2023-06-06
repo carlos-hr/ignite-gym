@@ -7,6 +7,7 @@ import {
   Text,
   VStack,
   ScrollView,
+  useToast,
 } from 'native-base';
 import { Feather } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
@@ -31,10 +32,12 @@ export function Exercise() {
   const [exerciseDetail, setExerciseDetail] = useState<ExerciseDTO | null>(
     null
   );
+  const [isSubmitingExercise, setIsSubmitingExercise] = useState(false);
 
-  const { goBack } = useNavigation<AppNavigatorRoutesProps>();
+  const { goBack, navigate } = useNavigation<AppNavigatorRoutesProps>();
   const { showError } = useError();
   const { params } = useRoute();
+  const { show } = useToast();
 
   const { id } = params as RouteParams;
 
@@ -44,7 +47,26 @@ export function Exercise() {
       setExerciseDetail(data);
     } catch (error) {
       showError(error, 'Não foi possível carregar o exercício');
+    }
+  }
+
+  async function handleCompleteExercise() {
+    try {
+      await api.post('/history/', {
+        exercise_id: id,
+      });
+
+      show({
+        title: 'Parabéns, exercício concluído!',
+        placement: 'top',
+        bgColor: 'green.500',
+      });
+
+      navigate('history');
+    } catch (error) {
+      showError(error, 'Não foi possível submeter o exercício');
     } finally {
+      setIsSubmitingExercise(false);
     }
   }
 
@@ -124,7 +146,11 @@ export function Exercise() {
                 </HStack>
               </HStack>
 
-              <Button title="Marcar como realizado" />
+              <Button
+                title="Marcar como realizado"
+                onPress={handleCompleteExercise}
+                isLoading={isSubmitingExercise}
+              />
             </Box>
           </VStack>
         </ScrollView>
