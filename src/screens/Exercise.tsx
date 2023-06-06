@@ -47,6 +47,7 @@ export function Exercise() {
       setExerciseDetail(data);
     } catch (error) {
       showError(error, 'Não foi possível carregar o exercício');
+      setExerciseDetail(null);
     }
   }
 
