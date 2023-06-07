@@ -19,6 +19,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useAuthContext } from '@hooks/useAuthContext';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { updateProfileSchema } from '@schemas/updateProfile';
+import defaultUserImage from '@assets/userPhotoDefault.png';
 
 interface ProfileFormData {
   name: string;
@@ -78,7 +79,9 @@ export function Profile() {
     }
   }
 
-  async function onSubmit(data: ProfileFormData) {}
+  async function onSubmit(data: ProfileFormData) {
+    console.log('>', data);
+  }
 
   return (
     <VStack flex={1}>
@@ -98,7 +101,7 @@ export function Profile() {
             <UserAvatar
               alt="Foto do usuário"
               size={33}
-              source={{ uri: userImage }}
+              source={user.avatar ? { uri: user.avatar } : defaultUserImage}
             />
           )}
 
