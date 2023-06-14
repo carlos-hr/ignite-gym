@@ -2,8 +2,9 @@ import { HStack, Heading, Image, Text, VStack, Icon } from 'native-base';
 import { TouchableOpacity } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import { ExerciseCardProps } from './types';
+import { api } from '@services/api';
 
-export function ExerciseCard({ ...rest }: ExerciseCardProps) {
+export function ExerciseCard({ exercise, ...rest }: ExerciseCardProps) {
   return (
     <TouchableOpacity {...rest}>
       <HStack
@@ -21,6 +22,9 @@ export function ExerciseCard({ ...rest }: ExerciseCardProps) {
           rounded="md"
           resizeMode="cover"
           alt="Imagem do exercício"
+          source={{
+            uri: `${api.defaults.baseURL}/exercise/thumb/${exercise.thumb}`,
+          }}
         />
 
         <VStack flex={1}>
