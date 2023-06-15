@@ -65,6 +65,15 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     }
   }
 
+  async function updateUserProfile(updatedUser: UserDTO) {
+    try {
+      setUser(updatedUser);
+      await storeUserData(updatedUser);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async function loadUserData() {
     try {
       setIsFetchingUserData(true);
@@ -87,7 +96,9 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isFetchingUserData, signIn, signOut, user }}>
+    <AuthContext.Provider
+      value={{ isFetchingUserData, signIn, signOut, user, updateUserProfile }}
+    >
       {children}
     </AuthContext.Provider>
   );

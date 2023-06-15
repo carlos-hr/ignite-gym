@@ -37,7 +37,7 @@ export function Profile() {
   const [userImage, setUserImage] = useState('');
 
   const { showError, toast } = useError();
-  const { user } = useAuthContext();
+  const { user, updateUserProfile } = useAuthContext();
   const {
     control,
     handleSubmit,
@@ -86,8 +86,11 @@ export function Profile() {
   async function onSubmit(data: ProfileFormData) {
     try {
       setIsProfileUpdating(true);
+      const { name } = data;
+      const updatedUser = { ...user, name };
 
       await api.put('/users', data);
+      await updateUserProfile(updatedUser);
 
       toast.show({
         title: 'Perfil atualizado com sucesso!',
@@ -215,7 +218,12 @@ export function Profile() {
             )}
           />
 
-          <Button title="Atualizar" mt={4} onPress={handleSubmit(onSubmit)} />
+          <Button
+            title="Atualizar"
+            mt={4}
+            onPress={handleSubmit(onSubmit)}
+            isLoading={isProfileUpdating}
+          />
         </Center>
       </ScrollView>
     </VStack>
