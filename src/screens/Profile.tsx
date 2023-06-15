@@ -20,6 +20,8 @@ import { useAuthContext } from '@hooks/useAuthContext';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { updateProfileSchema } from '@schemas/updateProfile';
 import defaultUserImage from '@assets/userPhotoDefault.png';
+import { api } from '@services/api';
+import { useError } from '@hooks/useError';
 
 interface ProfileFormData {
   name: string;
@@ -30,9 +32,11 @@ interface ProfileFormData {
 }
 
 export function Profile() {
+  const [isProfileUpdating, setIsProfileUpdating] = useState(false);
   const [isAvatarLoading, setIsAvatarLoading] = useState(false);
   const [userImage, setUserImage] = useState('');
 
+  const { showError, toast } = useError();
   const { user } = useAuthContext();
   const {
     control,
@@ -80,7 +84,21 @@ export function Profile() {
   }
 
   async function onSubmit(data: ProfileFormData) {
-    console.log('>', data);
+    try {
+      setIsProfileUpdating(true);
+
+      await api.put('/users', data);
+
+      toast.show({
+        title: 'Perfil atualizado com sucesso!',
+        placement: 'top',
+        bgColor: 'green.500',
+      });
+    } catch (error) {
+      showError(error, 'Ocorreu um erro ao atualizar o perfil');
+    } finally {
+      setIsProfileUpdating(false);
+    }
   }
 
   return (
