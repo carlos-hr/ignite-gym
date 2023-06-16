@@ -10,4 +10,5 @@ export interface AuthContextDataProps {
   isFetchingUserData: boolean;
   signOut: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
+  updateUserProfile: (updatedUser: UserDTO) => Promise<void>;
 }

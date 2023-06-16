@@ -16,5 +16,5 @@ export const useError = () => {
     });
   };
 
-  return { showError };
+  return { showError, toast };
 };

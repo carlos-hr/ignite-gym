@@ -20,6 +20,8 @@ import { useAuthContext } from '@hooks/useAuthContext';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { updateProfileSchema } from '@schemas/updateProfile';
 import defaultUserImage from '@assets/userPhotoDefault.png';
+import { api } from '@services/api';
+import { useError } from '@hooks/useError';
 
 interface ProfileFormData {
   name: string;
@@ -30,10 +32,12 @@ interface ProfileFormData {
 }
 
 export function Profile() {
+  const [isProfileUpdating, setIsProfileUpdating] = useState(false);
   const [isAvatarLoading, setIsAvatarLoading] = useState(false);
   const [userImage, setUserImage] = useState('');
 
-  const { user } = useAuthContext();
+  const { showError, toast } = useError();
+  const { user, updateUserProfile } = useAuthContext();
   const {
     control,
     handleSubmit,
@@ -80,7 +84,24 @@ export function Profile() {
   }
 
   async function onSubmit(data: ProfileFormData) {
-    console.log('>', data);
+    try {
+      setIsProfileUpdating(true);
+      const { name } = data;
+      const updatedUser = { ...user, name };
+
+      await api.put('/users', data);
+      await updateUserProfile(updatedUser);
+
+      toast.show({
+        title: 'Perfil atualizado com sucesso!',
+        placement: 'top',
+        bgColor: 'green.500',
+      });
+    } catch (error) {
+      showError(error, 'Ocorreu um erro ao atualizar o perfil');
+    } finally {
+      setIsProfileUpdating(false);
+    }
   }
 
   return (
@@ -197,7 +218,12 @@ export function Profile() {
             )}
           />
 
-          <Button title="Atualizar" mt={4} onPress={handleSubmit(onSubmit)} />
+          <Button
+            title="Atualizar"
+            mt={4}
+            onPress={handleSubmit(onSubmit)}
+            isLoading={isProfileUpdating}
+          />
         </Center>
       </ScrollView>
     </VStack>

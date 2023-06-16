@@ -7,7 +7,6 @@ import {
   Text,
   VStack,
   ScrollView,
-  useToast,
 } from 'native-base';
 import { Feather } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
@@ -35,9 +34,8 @@ export function Exercise() {
   const [isSubmitingExercise, setIsSubmitingExercise] = useState(false);
 
   const { goBack, navigate } = useNavigation<AppNavigatorRoutesProps>();
-  const { showError } = useError();
+  const { showError, toast } = useError();
   const { params } = useRoute();
-  const { show } = useToast();
 
   const { id } = params as RouteParams;
 
@@ -57,7 +55,7 @@ export function Exercise() {
         exercise_id: id,
       });
 
-      show({
+      toast.show({
         title: 'Parabéns, exercício concluído!',
         placement: 'top',
         bgColor: 'green.500',
