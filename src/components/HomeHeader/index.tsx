@@ -6,6 +6,7 @@ import { TouchableOpacity } from 'react-native';
 import { useAuthContext } from '@hooks/useAuthContext';
 
 import defaultUserImage from '@assets/userPhotoDefault.png';
+import { api } from '@services/api';
 
 export function HomeHeader() {
   const { user, signOut } = useAuthContext();
@@ -13,7 +14,11 @@ export function HomeHeader() {
   return (
     <HStack bgColor="gray.600" pt={16} pb={5} px={8} alignItems="center">
       <UserAvatar
-        source={user.avatar ? { uri: user.avatar } : defaultUserImage}
+        source={
+          user.avatar
+            ? { uri: `${api.defaults.baseURL}/avatar/${user.avatar}` }
+            : defaultUserImage
+        }
         alt="user profile image"
         size={16}
         mr={4}
