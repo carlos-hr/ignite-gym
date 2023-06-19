@@ -34,7 +34,6 @@ interface ProfileFormData {
 export function Profile() {
   const [isProfileUpdating, setIsProfileUpdating] = useState(false);
   const [isAvatarLoading, setIsAvatarLoading] = useState(false);
-  const [userImage, setUserImage] = useState('');
 
   const { showError, toast } = useError();
   const { user, updateUserProfile } = useAuthContext();
@@ -64,20 +63,50 @@ export function Profile() {
         return;
       }
 
-      const { uri } = selectedImage.assets[0];
+      const { uri, type } = selectedImage.assets[0];
 
       if (uri) {
+        const imageLimitSize = 5;
         const imageInfo = await FileSystem.getInfoAsync(uri);
 
-        if (imageInfo.exists && imageInfo.size / 1024 / 1024 > 5) {
+        if (imageInfo.exists && imageInfo.size / 1024 / 1024 > imageLimitSize) {
           Alert.alert(
             'Essa imagem é muito grande. Selecione uma imagem de até 5.MB'
           );
         }
-        setUserImage(uri);
+
+        const fileExtension = uri.split('.').pop();
+
+        const photoFile = {
+          name: `${user.name}.${fileExtension}`.toLowerCase(),
+          uri,
+          type: `${type}/${fileExtension}`,
+        } as any;
+
+        const imageUploadData = new FormData();
+        imageUploadData.append('avatar', photoFile);
+
+        const avatarResponse = await api.patch(
+          '/users/avatar',
+          imageUploadData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+
+        const updatedUser = { ...user, avatar: avatarResponse.data.avatar };
+        await updateUserProfile(updatedUser);
+
+        toast.show({
+          title: 'Foto atualizada!',
+          placement: 'top',
+          bgColor: 'green.500',
+        });
       }
     } catch (error) {
-      console.log(error);
+      showError(error, 'Ocorreu um erro ao atualizar a imagem de perfil');
     } finally {
       setIsAvatarLoading(false);
     }
