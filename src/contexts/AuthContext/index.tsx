@@ -25,9 +25,13 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   }
 
-  async function storeUserAndToken(userData: UserDTO, token: string) {
+  async function storeUserAndToken(
+    userData: UserDTO,
+    token: string,
+    refresh_token: string
+  ) {
     try {
-      await storeAuthToken(token);
+      await storeAuthToken(token, refresh_token);
       await storeUserData(userData);
     } catch (error) {
       throw error;
@@ -39,10 +43,10 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       setIsFetchingUserData(true);
       const { data } = await api.post('/sessions', { email, password });
 
-      if (data.user && data.token) {
+      if (data.user && data.token && data.refresh_token) {
         setUserAndHeaders(data.user, data.token);
 
-        await storeUserAndToken(data.user, data.token);
+        await storeUserAndToken(data.user, data.token, data.refresh_token);
       }
     } catch (error) {
       throw error;
@@ -78,11 +82,11 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     try {
       setIsFetchingUserData(true);
       const userLogged = await getStoredUserData();
-      const token = await getStoredAuthToken();
+      const { token, refresh_token } = await getStoredAuthToken();
 
       if (!!userLogged && !!token) {
         setUserAndHeaders(userLogged, token);
-        await storeUserAndToken(userLogged, token);
+        await storeUserAndToken(userLogged, token, refresh_token);
       }
     } catch (error) {
       throw error;
@@ -94,6 +98,14 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   useEffect(() => {
     loadUserData();
   }, []);
+
+  useEffect(() => {
+    const sub = api.registerInterceptTokenManager(signOut);
+
+    return () => {
+      sub();
+    };
+  }, [signOut]);
 
   return (
     <AuthContext.Provider
